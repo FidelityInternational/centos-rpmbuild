@@ -1,27 +1,26 @@
-FROM centos:6.10
+FROM rockylinux:8.7.20221219
 
 RUN yum install -y gcc gcc-c++ \
-                   libtool libtool-ltdl \
-                   make cmake \
-                   git \
-                   pkgconfig \
-                   sudo \
-                   automake autoconf \
-                   yum-utils rpm-build && \
-    yum clean all
+  libtool libtool-ltdl \
+  make cmake \
+  git \
+  pkgconfig \
+  sudo \
+  automake autoconf \
+  yum-utils rpm-build && \
+  yum clean all
 
 RUN useradd builder -u 1000 -m -G users,wheel && \
-    echo "builder ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-    echo "# macros"                      >  /home/builder/.rpmmacros && \
-    echo "%_topdir    /home/builder/rpmbuild" >> /home/builder/.rpmmacros && \
-    echo "%_sourcedir %{_topdir}"        >> /home/builder/.rpmmacros && \
-    echo "%_builddir  %{_topdir}"        >> /home/builder/.rpmmacros && \
-    echo "%_specdir   %{_topdir}"        >> /home/builder/.rpmmacros && \
-    echo "%_rpmdir    %{_topdir}"        >> /home/builder/.rpmmacros && \
-    echo "%_srcrpmdir %{_topdir}"        >> /home/builder/.rpmmacros && \
-    mkdir /home/builder/rpm && \
-    chown -R builder /home/builder
+  echo "builder ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+  echo "# macros"                           >  /home/builder/.rpmmacros && \
+  echo "%_topdir    /home/builder/rpmbuild" >> /home/builder/.rpmmacros && \
+  echo "%_sourcedir %{_topdir}"             >> /home/builder/.rpmmacros && \
+  echo "%_builddir  %{_topdir}"             >> /home/builder/.rpmmacros && \
+  echo "%_specdir   %{_topdir}"             >> /home/builder/.rpmmacros && \
+  echo "%_rpmdir    %{_topdir}"             >> /home/builder/.rpmmacros && \
+  echo "%_srcrpmdir %{_topdir}"             >> /home/builder/.rpmmacros && \
+  mkdir /home/builder/rpm && \
+  chown -R builder /home/builder
 USER builder
 
-ENV FLAVOR=rpmbuild OS=centos DIST=el6
-CMD /srv/pkg
+ENV FLAVOR=rpmbuild OS=centos DIST=el8
